@@ -11,6 +11,8 @@
 int main() {
     sf::RenderWindow window({800, 600}, "Capibara Jump");
 
+    bool gameOver = false; // игра окончена или нет
+
     // текстура капибары
     Capybara::setTexture("assets/capibara.png");
     Capybara capibara;
@@ -36,14 +38,15 @@ int main() {
         std::cout << "Не удалось загрузить шрифт assets/Pulserifleacadi.ttf\n";
     }
 
-    sf::Text collisionText;
-    collisionText.setFont(font);
-    collisionText.setString("Cosanie");
-    collisionText.setCharacterSize(40);
-    collisionText.setFillColor(sf::Color::Red);
-    collisionText.setPosition(300, 200);
 
-    bool showCollision = false;
+    //текст гейм овер
+    sf::Text gameOverText;
+    gameOverText.setFont(font);
+    gameOverText.setString("GAME OVER\nPress R to restart");
+    gameOverText.setCharacterSize(40);
+    gameOverText.setFillColor(sf::Color::White);
+    gameOverText.setPosition(200, 200);
+
 
     sf::Clock clock;
 
@@ -60,57 +63,78 @@ int main() {
 
         float dt = clock.restart().asSeconds();
 
-        // прыжок
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+        // обработка ввода
+        // прыжок - только если игра не окончена
+        if (!gameOver && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
             capibara.jump();
         }
 
-        // создание новых препятствий
-        obstacleTimer += dt;
-        if (obstacleTimer >= obstacleInterval) {
+        // рестарт игры по R, если игра окончена
+        if (gameOver && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
+            // сброс состояния игры
+            gameOver = false;
+            obstacles.clear();
+
+            // вернуть капибару на стартовую позицию
+            capibara.setPosition(100, 400);
+
+            // сброс таймера препятствий
             obstacleTimer = 0.0f;
 
-            auto obstacle = std::make_shared<Obstacle>();
-            obstacle->setTexture("assets/obstacle.png");
-
-            float x = 850; // справа за экраном
-
-            // препятствие всегда на полу:
-            // zemlaLevel = 500, высота препятствия ~ 50 (подгони под свою текстуру)
-            float y = 500 - 50;
-
-            obstacle->setPosition(x, y);
-            obstacles.push_back(obstacle);
+            // сброс часов, чтобы dt не прыгнул
+            clock.restart();
         }
 
-        // обновление капибары
-        capibara.update(dt);
 
-        // обновление препятствий
-        for (auto &ob : obstacles) {
-            ob->update(dt);
+        if (!gameOver) {
+            // прыжок уже обрабатывается выше
+
+            // создание новых препятствий
+            obstacleTimer += dt;
+            if (obstacleTimer >= obstacleInterval) {
+                obstacleTimer = 0.0f;
+
+                auto obstacle = std::make_shared<Obstacle>();
+                obstacle->setTexture("assets/obstacle.png");
+
+                float x = 850; // справа за экраном
+                float y = 500 - 50; // на полу
+                obstacle->setPosition(x, y);
+                obstacles.push_back(obstacle);
+            }
+
+            // обновление капибары
+            capibara.update(dt);
+
+            // обновление препятствий
+            for (auto &ob : obstacles) {
+                ob->update(dt);
+            }
+
+            // удаление препятствий, ушедших за экран
+            obstacles.erase(
+                std::remove_if(obstacles.begin(), obstacles.end(),
+                               [](const std::shared_ptr<Obstacle> &ob) {
+                                   return ob->getRect().left < -100.0f;
+                               }),
+                obstacles.end()
+            );
         }
 
         // проверка коллизий
         sf::Rect<float> capRect = capibara.getRect();
-        showCollision = false;
 
-        for (auto &ob : obstacles) {
-            sf::Rect<float> obRect = ob->getRect();
-            if (capRect.intersects(obRect)) {
-                showCollision = true;
-                break;
+        if (!gameOver) {
+            for (auto &ob : obstacles) {
+                sf::Rect<float> obRect = ob->getRect();
+                if (capRect.intersects(obRect)) {
+                    gameOver = true; // игра окончена
+                    break;
+                }
             }
         }
 
-        // удаление препятствий, ушедших за экран
-        obstacles.erase(
-            std::remove_if(obstacles.begin(), obstacles.end(),
-                           [](const std::shared_ptr<Obstacle> &ob) {
-                               return ob->getRect().left < -100.0f;
-                           }),
-            obstacles.end()
-        );
+
 
         // рисуем
         window.clear();
@@ -122,8 +146,11 @@ int main() {
 
         window.draw(capibara);
 
-        if (showCollision) {
-            window.draw(collisionText);
+
+
+        // если игра окончена — показываем экран проигрыша
+        if (gameOver) {
+            window.draw(gameOverText);
         }
 
         window.display();
