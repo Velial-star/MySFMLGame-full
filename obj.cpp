@@ -26,3 +26,7 @@ sf::Rect<float> Obstacle::getRect() const {
 sf::Sprite& Obstacle::getSprite() {
     return _sprite;
 }
+
+void Obstacle::setSpeed(float speed) {
+    _speed = speed;
+}

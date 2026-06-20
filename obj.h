@@ -18,6 +18,8 @@ public:
     void update(float dt);
     sf::Rect<float> getRect() const;
     sf::Sprite& getSprite();
+
+    void setSpeed(float speed);
 };
 
 #endif //CAPIBARA_OBJ_H

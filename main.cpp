@@ -32,6 +32,9 @@ int main() {
     // таймер для появления новых препятствий
     float obstacleTimer = 0.0f;
     float obstacleInterval = 2.0f; // стартовое значение, дальше будет рандом
+    bool waitingForCar = false;
+    float carWaitTimer = 0.0f;
+
 
     // текст "КОСАНИЕ"
     sf::Font font;
@@ -88,34 +91,58 @@ int main() {
 
 
         if (!gameOver) {
-
-            // создание новых препятствий
+            // обновляем таймер спавна
             obstacleTimer += dt;
-            if (obstacleTimer >= obstacleInterval) {
+
+            float zemlaLevel = 500.0f;
+
+            if (waitingForCar) {
+                // ждём 2 секунды тишины перед машинкой
+                carWaitTimer += dt;
+                if (carWaitTimer >= 2.0f) {
+                    carWaitTimer = 0.0f;
+                    waitingForCar = false;
+
+                    auto ob = std::make_shared<Obstacle>();
+                    ob->setTexture("assets/car.png");
+                    ob->getSprite().setScale(2.0f, 2.0f);
+                    ob->setSpeed(700.0f);
+
+                    auto b = ob->getSprite().getGlobalBounds();
+                    ob->setPosition(850.0f, zemlaLevel - b.height);
+                    obstacles.push_back(ob);
+
+                    // после машинки снова обычные промежутки
+                    obstacleInterval = 1.5f + (std::rand() % 1001) / 1000.0f;
+                    obstacleTimer = 0.0f;
+                }
+            }
+            else if (obstacleTimer >= obstacleInterval) {
+                // пришло время нового препятствия
                 obstacleTimer = 0.0f;
 
-                auto obstacle = std::make_shared<Obstacle>();
-                obstacle->setTexture("assets/kustik.png");
+                int r = std::rand() % 11;  // число 0..10 [web:329][web:331]
 
-                // увеличение размера, например в 1.5 раза
-                obstacle->getSprite().setScale(1.5f, 1.5f);
-                // или в 2 раза:
-                // obstacle->getSprite().setScale(2.0f, 2.0f);
+                if (r <= 9) {
+                    // 0–9: обычный куст
+                    auto ob = std::make_shared<Obstacle>();
+                    ob->setTexture("assets/kustik.png");
+                    ob->getSprite().setScale(1.5f, 1.5f);
+                    ob->setSpeed(200.0f);
 
-                float zemlaLevel = 500.0f; // Y верха земли
+                    auto b = ob->getSprite().getGlobalBounds();
+                    ob->setPosition(850.0f, zemlaLevel - b.height);
+                    obstacles.push_back(ob);
 
-                // теперь высота уже с учётом масштаба
-                sf::FloatRect obBounds = obstacle->getSprite().getGlobalBounds();
-
-                float x = 850.0f;                          // справа за экраном
-                float y = zemlaLevel - obBounds.height;    // низ препятствия на земле
-
-                obstacle->setPosition(x, y);
-                obstacles.push_back(obstacle);
-                // простой рандом: новое время до следующего препятствия от 1 до 3 секунд
-                obstacleInterval = 1.5 + (std::rand() % 1001) / 1000.0f;
-                // 1.0 + (0.000–2.000) -> 1.0..3.0
+                    obstacleInterval = 1.5f + (std::rand() % 1001) / 1000.0f;
+                } else {
+                    // 10: заранее включаем «затишье перед машинкой»
+                    waitingForCar = true;
+                    carWaitTimer = 0.0f;
+                }
             }
+
+
 
             // обновление капибары
             capibara.update(dt);
