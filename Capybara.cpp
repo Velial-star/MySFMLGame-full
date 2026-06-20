@@ -1,11 +1,9 @@
 #include "Capybara.h"
 
-#include "Capybara.h"
-
 Capybara::Capybara() {
     _sprite.setTexture(_texture);
-    _sprite.setScale({3.0, 3.0});
-    _speedY = 0.0;
+    _sprite.setScale({3, 3});
+    _speedY = 0;
     _isJumping = false;
 }
 
@@ -18,29 +16,31 @@ void Capybara::setPosition(float x, float y) {
 }
 
 void Capybara::update(float dt) {
-    // Гравитация
-    _speedY += 500.0 * dt;
-    _sprite.move({0.0, _speedY * dt});
+    // гравитация
+    _speedY += 500 * dt;
+    _sprite.move({0, _speedY * dt});
 
-    // Высота спрайта
+    // высота спрайта с учётом масштаба
     float spriteVisota = _sprite.getTexture()->getSize().y * _sprite.getScale().y;
 
-    // Позиция "ног" (нижняя точка спрайта)
+    // позиция "ног"
     float nogiY = _sprite.getPosition().y + spriteVisota;
 
-    float groundLevel = 500.0;
+    // уровень земли
+    float zemlaLevel = 500;
 
-    if (nogiY > groundLevel) {
-        float newY = groundLevel - spriteVisota;
+    // если ноги ниже земли — ставим на землю
+    if (nogiY > zemlaLevel) {
+        float newY = zemlaLevel - spriteVisota;
         _sprite.setPosition({_sprite.getPosition().x, newY});
-        _speedY = 0.0;
+        _speedY = 0;
         _isJumping = false;
     }
 }
 
 void Capybara::jump() {
     if (!_isJumping) {
-        _speedY = -300.0;
+        _speedY = -300;
         _isJumping = true;
     }
 }
@@ -51,4 +51,8 @@ void Capybara::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
 float Capybara::getY() const {
     return _sprite.getPosition().y;
+}
+
+sf::Rect<float> Capybara::getRect() const {
+    return _sprite.getGlobalBounds();
 }
