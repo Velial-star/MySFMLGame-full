@@ -8,6 +8,7 @@
 #include "Capybara.h"
 #include "obj.h"
 
+
 int main() {
     sf::RenderWindow window({800, 600}, "Capibara Jump");
 
@@ -30,7 +31,7 @@ int main() {
 
     // таймер для появления новых препятствий
     float obstacleTimer = 0.0f;
-    float obstacleInterval = 2.0f; // одно препятствие каждые 2 секунды
+    float obstacleInterval = 2.0f; // стартовое значение, дальше будет рандом
 
     // текст "КОСАНИЕ"
     sf::Font font;
@@ -111,6 +112,9 @@ int main() {
 
                 obstacle->setPosition(x, y);
                 obstacles.push_back(obstacle);
+                // простой рандом: новое время до следующего препятствия от 1 до 3 секунд
+                obstacleInterval = 1.5 + (std::rand() % 1001) / 1000.0f;
+                // 1.0 + (0.000–2.000) -> 1.0..3.0
             }
 
             // обновление капибары
