@@ -23,6 +23,6 @@ sf::Rect<float> Obstacle::getRect() const {
     return _sprite.getGlobalBounds();
 }
 
-sf::Sprite Obstacle::getSprite() {
+sf::Sprite& Obstacle::getSprite() {
     return _sprite;
 }

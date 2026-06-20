@@ -11,12 +11,13 @@ class Obstacle {
     float _speed;
 
 public:
+
     Obstacle();
     void setTexture(std::string path);
     void setPosition(float x, float y);
     void update(float dt);
     sf::Rect<float> getRect() const;
-    sf::Sprite getSprite();
+    sf::Sprite& getSprite();
 };
 
 #endif //CAPIBARA_OBJ_H

@@ -87,7 +87,6 @@ int main() {
 
 
         if (!gameOver) {
-            // прыжок уже обрабатывается выше
 
             // создание новых препятствий
             obstacleTimer += dt;
@@ -95,10 +94,21 @@ int main() {
                 obstacleTimer = 0.0f;
 
                 auto obstacle = std::make_shared<Obstacle>();
-                obstacle->setTexture("assets/obstacle.png");
+                obstacle->setTexture("assets/kustik.png");
 
-                float x = 850; // справа за экраном
-                float y = 500 - 50; // на полу
+                // увеличение размера, например в 1.5 раза
+                obstacle->getSprite().setScale(1.5f, 1.5f);
+                // или в 2 раза:
+                // obstacle->getSprite().setScale(2.0f, 2.0f);
+
+                float zemlaLevel = 500.0f; // Y верха земли
+
+                // теперь высота уже с учётом масштаба
+                sf::FloatRect obBounds = obstacle->getSprite().getGlobalBounds();
+
+                float x = 850.0f;                          // справа за экраном
+                float y = zemlaLevel - obBounds.height;    // низ препятствия на земле
+
                 obstacle->setPosition(x, y);
                 obstacles.push_back(obstacle);
             }
