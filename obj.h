@@ -1,6 +1,7 @@
 #ifndef CAPIBARA_OBJ_H
 #define CAPIBARA_OBJ_H
 
+
 #include <string>
 #include <SFML/Graphics.hpp>
 

@@ -1,5 +1,6 @@
 #include "Capybara.h"
 
+
 Capybara::Capybara() {
     _sprite.setTexture(_texture);
     _sprite.setScale({3, 3});

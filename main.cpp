@@ -16,6 +16,7 @@ int main() {
     Capybara capibara;
     capibara.setPosition(100, 400);
 
+
     // пол
     sf::RectangleShape zemla;
     zemla.setSize({800, 20});

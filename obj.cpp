@@ -1,5 +1,6 @@
 #include "obj.h"
 
+
 Obstacle::Obstacle() {
     _speed = 200; // скорость влево в пикселях/сек
 }

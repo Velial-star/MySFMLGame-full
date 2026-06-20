@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.14) # SFML требует минимум 3.14 для FetchContent
 project(mario)
 
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
