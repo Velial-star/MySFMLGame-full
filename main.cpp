@@ -38,6 +38,18 @@ int main() {
     gameOverText.setFillColor(sf::Color::White);
     gameOverText.setPosition(200, 200);
 
+    sf::Texture goTex[4];
+    goTex[0].loadFromFile("assets/GameOver_1.png");
+    goTex[1].loadFromFile("assets/GameOver_2.png");
+    goTex[2].loadFromFile("assets/GameOver_3.png");
+    goTex[3].loadFromFile("assets/GameOver_4.png");
+    sf::Sprite goSprite(goTex[0]);
+    goSprite.setPosition(80.0, 200.0);
+    goSprite.setScale(6.0, 6.0);
+    int goFrame = 0;
+    sf::Clock goClock;
+    float goInterval = 0.2;
+
     sf::Clock clock;
 
     std::srand(static_cast<unsigned>(time(nullptr)));
@@ -90,11 +102,20 @@ int main() {
             for (auto &ob : obstacles) {
                 sf::Rect<float> obRect = ob->getRect();
                 if (capRect.intersects(obRect)) {
-                    gameOver = true; // игра окончена
+                    gameOver = true;
                     break;
                 }
             }
         }
+
+        if (gameOver) {
+            if (goClock.getElapsedTime().asSeconds() >= goInterval) {
+                goClock.restart();
+                goFrame = (goFrame + 1) % 4;
+                goSprite.setTexture(goTex[goFrame], true);
+            }
+        }
+
         window.clear();
         window.draw(zemla);
 
@@ -105,6 +126,7 @@ int main() {
         window.draw(capibara);
 
         if (gameOver) {
+            window.draw(goSprite);
             window.draw(gameOverText);
         }
 
