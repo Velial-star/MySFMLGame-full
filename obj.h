@@ -4,6 +4,8 @@
 
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <memory>
+
 
 class Obstacle {
     sf::Sprite _sprite;
@@ -18,8 +20,17 @@ public:
     void update(float dt);
     sf::Rect<float> getRect() const;
     sf::Sprite& getSprite();
-
     void setSpeed(float speed);
 };
+
+void spawnObstacle(
+    std::vector<std::shared_ptr<Obstacle>>& obstacles,
+    bool& waitingForCar,
+    float& carWaitTimer,
+    float& obstacleTimer,
+    float& obstacleInterval,
+    float dt
+);
+
 
 #endif //CAPIBARA_OBJ_H

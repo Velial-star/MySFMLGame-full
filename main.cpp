@@ -32,8 +32,8 @@ int main() {
     // таймер для появления новых препятствий
     float obstacleTimer = 0.0f;
     float obstacleInterval = 2.0f; // стартовое значение, дальше будет рандом
-    bool waitingForCar = false;
-    float carWaitTimer = 0.0f;
+    bool waitingForTractor = false;
+    float TractorWaitTimer = 0.0f;
 
 
     // текст "КОСАНИЕ"
@@ -91,59 +91,8 @@ int main() {
 
 
         if (!gameOver) {
-            // обновляем таймер спавна
-            obstacleTimer += dt;
-
-            float zemlaLevel = 500.0f;
-
-            if (waitingForCar) {
-                // ждём 2 секунды тишины перед машинкой
-                carWaitTimer += dt;
-                if (carWaitTimer >= 2.0f) {
-                    carWaitTimer = 0.0f;
-                    waitingForCar = false;
-
-                    auto ob = std::make_shared<Obstacle>();
-                    ob->setTexture("assets/car.png");
-                    ob->getSprite().setScale(2.0f, 2.0f);
-                    ob->setSpeed(700.0f);
-
-                    auto b = ob->getSprite().getGlobalBounds();
-                    ob->setPosition(850.0f, zemlaLevel - b.height);
-                    obstacles.push_back(ob);
-
-                    // после машинки снова обычные промежутки
-                    obstacleInterval = 1.5f + (std::rand() % 1001) / 1000.0f;
-                    obstacleTimer = 0.0f;
-                }
-            }
-            else if (obstacleTimer >= obstacleInterval) {
-                // пришло время нового препятствия
-                obstacleTimer = 0.0f;
-
-                int r = std::rand() % 11;  // число 0..10 [web:329][web:331]
-
-                if (r <= 9) {
-                    // 0–9: обычный куст
-                    auto ob = std::make_shared<Obstacle>();
-                    ob->setTexture("assets/kustik.png");
-                    ob->getSprite().setScale(1.5f, 1.5f);
-                    ob->setSpeed(200.0f);
-
-                    auto b = ob->getSprite().getGlobalBounds();
-                    ob->setPosition(850.0f, zemlaLevel - b.height);
-                    obstacles.push_back(ob);
-
-                    obstacleInterval = 1.5f + (std::rand() % 1001) / 1000.0f;
-                } else {
-                    // 10: заранее включаем «затишье перед машинкой»
-                    waitingForCar = true;
-                    carWaitTimer = 0.0f;
-                }
-            }
-
-
-
+            spawnObstacle(obstacles, waitingForTractor, TractorWaitTimer,
+                          obstacleTimer, obstacleInterval, dt);
             // обновление капибары
             capibara.update(dt);
 

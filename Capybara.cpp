@@ -41,7 +41,7 @@ void Capybara::update(float dt) {
 
 void Capybara::jump() {
     if (!_isJumping) {
-        _speedY = -300;
+        _speedY = -400;
         _isJumping = true;
     }
 }
