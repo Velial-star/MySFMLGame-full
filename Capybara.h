@@ -24,5 +24,4 @@ public:
     float getY() const;
     sf::Rect<float> getRect() const;
 };
-
 #endif //CAPIBARA_CAPIBARA_H

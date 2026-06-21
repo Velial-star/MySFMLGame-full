@@ -67,4 +67,3 @@ float Capybara::getY() const {
 
 sf::Rect<float> Capybara::getRect() const {
     return _sprite.getGlobalBounds();}
-

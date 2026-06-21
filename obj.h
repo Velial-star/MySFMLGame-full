@@ -32,5 +32,4 @@ void spawnObstacle(
     float dt
 );
 
-
 #endif //CAPIBARA_OBJ_H
