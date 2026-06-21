@@ -95,18 +95,19 @@ int main() {
                 }
             }
         }
+        window.clear();
+        window.draw(zemla);
 
         for (auto &ob : obstacles) {
             window.draw(ob->getSprite());
         }
 
+        window.draw(capibara);
+
         if (gameOver) {
             window.draw(gameOverText);
         }
 
-        window.clear();
-        window.draw(zemla);
-        window.draw(capibara);
         window.display();
     }
 
