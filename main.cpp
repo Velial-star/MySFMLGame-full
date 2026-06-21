@@ -90,7 +90,7 @@ int main() {
             for (auto &ob : obstacles) {
                 sf::Rect<float> obRect = ob->getRect();
                 if (capRect.intersects(obRect)) {
-                    gameOver = true; // игра окончена
+                    gameOver = true; 
                     break;
                 }
             }
