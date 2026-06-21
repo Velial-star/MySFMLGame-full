@@ -102,20 +102,11 @@ int main() {
             for (auto &ob : obstacles) {
                 sf::Rect<float> obRect = ob->getRect();
                 if (capRect.intersects(obRect)) {
-                    gameOver = true;
+                    gameOver = true; // игра окончена
                     break;
                 }
             }
         }
-
-        if (gameOver) {
-            if (goClock.getElapsedTime().asSeconds() >= goInterval) {
-                goClock.restart();
-                goFrame = (goFrame + 1) % 4;
-                goSprite.setTexture(goTex[goFrame], true);
-            }
-        }
-
         window.clear();
         window.draw(zemla);
 
@@ -126,7 +117,6 @@ int main() {
         window.draw(capibara);
 
         if (gameOver) {
-            window.draw(goSprite);
             window.draw(gameOverText);
         }
 
