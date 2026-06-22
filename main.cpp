@@ -39,10 +39,10 @@ int main() {
     gameOverText.setPosition(200, 200);
 
     sf::Texture goTex[4];
-    goTex[0].loadFromFile("assets/GameOver_1.png");
-    goTex[1].loadFromFile("assets/GameOver_2.png");
-    goTex[2].loadFromFile("assets/GameOver_3.png");
-    goTex[3].loadFromFile("assets/GameOver_4.png");
+    goTex[0].loadFromFile("assets/GameOver/GameOver_1.png");
+    goTex[1].loadFromFile("assets/GameOver/GameOver_2.png");
+    goTex[2].loadFromFile("assets/GameOver/GameOver_3.png");
+    goTex[3].loadFromFile("assets/GameOver/GameOver_4.png");
     sf::Sprite goSprite(goTex[0]);
     goSprite.setPosition(80.0, 200.0);
     goSprite.setScale(6.0, 6.0);
